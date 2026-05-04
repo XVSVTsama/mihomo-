@@ -1,0 +1,486 @@
+mode                      : rule                                                # 配置： 默认模式             # 规则模式 (rule)  /  全局翻墙 (global)  /  直连模式 (driect)
+
+mixed-port: 7254                                              # 配置：代理服务端口           # 在同一个端口上，同时提供 HTTP(S) + SOCKS4/5
+port: 7249                                               # 配置：代理服务端口           # 只提供 HTTP(S) 代理
+socks-port: 7346                                              # 配置：代理服务端口           # 只提供 SOCKS 代理
+#redir-port                : 7893                                                # 配置：代理服务端口           # Linux 和 macOS 的透明代理服务器端口（ReDIRECT TCP 和 TProxy UDP）
+#tproxy-port               : 7894                                                # 配置：代理服务端口           # Linux 的透明代理服务器端口（TProxy TCP 和 TProxy UDP）
+
+allow-lan: true
+
+interface-name: XVSVT
+
+etag-support: true
+
+global-ua: clash.meta
+
+ipv6: true
+
+log-level: info
+
+external-controller: :9090
+
+# 启用一个内置或已下载的UI面板
+#global-client-fingerprint: Firefox                                            # 全局客户端指纹 # 随机指纹     # 可选：chrome, firefox, safari, iOS, android, edge, 360, qq, random, 若选择 random, 则按 Cloudflare Radar 数据按概率生成一个现代浏览器指纹
+#最新mihomo文档说明以弃用，需直接在proxies:配置
+
+external-ui: dashboard  # 假设您已将 dashboard 文件夹放在正确的位置
+
+
+unified-delay: true    # 策略组测速时，只保留一个测速结果，使切换更平滑 (推荐开启)
+
+tcp-concurrent: true   # 开启 TCP 并发连接 (针对同一域名可建立多个连接，提升性能)
+
+keep-alive-idle: 600   # TCP Keep-Alive 空闲时间 (秒)
+
+keep-alive-interval: 15 # TCP Keep-Alive 探测间隔 (秒)
+
+store-selected: true                                                # 储存 API 对策略组的选择，以供下次启动时使用
+store-fake-ip: true                                                # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
+geodata-loader: memconservative
+geo-auto-update: true 
+geo-update-interval: 24
+geox-url:
+  geoip: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
+  geosite: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
+  mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+
+
+tun:                                                    
+  enable: true 
+  device: XVSVT
+  auto-detect-interface: true                                                # 自动检测出口网卡
+  auto-route: true 
+  auto-redirect: true
+  strict-route: true
+  stack: gvisor                                           
+  dns-hijack:
+    - "any:53"  
+    - "udp://any:53"
+    - "tcp://any:53"                                                             
+  route-address:
+  - "198.51.100.0/30"
+  - "1.0.0.0/8"
+  - "2.0.0.0/7"
+  - "4.0.0.0/6"
+  - "8.0.0.0/7"
+  - "11.0.0.0/8"
+  - "12.0.0.0/6"
+  - "16.0.0.0/4"
+  - "32.0.0.0/3"
+  - "64.0.0.0/3"
+  - "96.0.0.0/4"
+  - "112.0.0.0/5"
+  - "120.0.0.0/6"
+  - "124.0.0.0/7"
+  - "126.0.0.0/8"
+  - "128.0.0.0/3"
+  - "160.0.0.0/5"
+  - "168.0.0.0/8"
+  - "169.0.0.0/9"
+  - "169.128.0.0/10"
+  - "169.192.0.0/11"
+  - "169.224.0.0/12"
+  - "169.240.0.0/13"
+  - "169.248.0.0/14"
+  - "169.252.0.0/15"
+  - "169.255.0.0/16"
+  - "170.0.0.0/7"
+  - "172.0.0.0/12"
+  - "172.32.0.0/11"
+  - "172.64.0.0/10"
+  - "172.128.0.0/9"
+  - "173.0.0.0/8"
+  - "174.0.0.0/7"
+  - "176.0.0.0/4"
+  - "192.0.0.0/9"
+  - "192.128.0.0/11"
+  - "192.160.0.0/13"
+  - "192.169.0.0/16"
+  - "192.170.0.0/15"
+  - "192.172.0.0/14"
+  - "192.176.0.0/12"
+  - "192.192.0.0/10"
+  - "193.0.0.0/8"
+  - "194.0.0.0/7"
+  - "196.0.0.0/6"
+  - "200.0.0.0/5"
+  - "208.0.0.0/4"
+  
+ntp:
+  enable: true                # 开启内置对时服务，确保 VLESS 握手成功
+  write-to-system: false      # 核心安全：不修改系统时钟，仅在内核内部校准
+  server: 'time.apple.com'    # 首选服务器：国际通用且稳定
+  server-list:                # 备选列表：
+    - 'time.windows.com'      # 微软 NTP
+  # - 'ntp.aliyun.com'        # 阿里 NTP
+  # - 'time1.cloud.tencent.com' # 腾讯 NTP
+
+  benchmark-url: 'https://www.apple.com/library/test/success.html'
+  benchmark-timeout: 5s       # 建议加上 's' 单位，确保兼容性
+  port: 123                   # 标准 NTP 端口
+hosts                             :                                                     # Clash:全局生效 / Stash:仅direct生效 
+  '+.clash.dev'               : [ '127.0.0.1'          ]           # 支持通配符域名
+  '+.stash.dev'               : [ '127.0.0.1'          ]           
+  'dns.alidns.com'            : [ '223.5.5.5'          , '223.6.6.6'          ] # 🇨🇳 阿里 DNS
+  'pdns.dnspod.cn'            : [ '119.29.29.29'       , '119.28.28.28'       ] # 🇨🇳 腾讯 DNS
+  'dns.pub'                   : [ '119.29.29.29'       ]           # 🇨🇳 腾讯 DNS  
+  'doh.pub'                   : [ '1.12.12.12'         , '120.53.53.53'       ] # 🇨🇳 腾讯 DNS
+  'dot.pub'                   : [ '1.12.12.12'         , '120.53.53.53'       ] # 🇨🇳 腾讯 DNS
+  'one.one.one.one'           : [ '1.0.0.1'            , '1.1.1.1'            ] # 🇺🇸 Cloudflare DNS
+  'services.googleapis.cn'    : [ 'services.googleapis.com' ]
+  'service.googleapis.cn'     : [ 'service.googleapis.com'  ]
+  '+.mcdn.bilivideo.com'      : [ '0.0.0.0'            ]
+  '+.mcdn.bilivideo.cn'       : [ '0.0.0.0'            ]
+  'mtalk.google.com'          : [ '142.250.107.188'    , '108.177.125.188'    ]
+  'dns.msftncsi.com'          : [ '131.107.255.255'    , 'fd3e:4f5a:5b81::1'  ]
+  
+
+proxy-providers:
+#这里只写了一个机场，可以自己添加B,C,D...
+  A:
+    type: http
+    url: 你的机场url
+    path: ./proxy_providers/provider1.yaml
+    interval: 3600
+    proxy: DIRECT
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      timeout: 5000
+      lazy: true
+      expected-status: 204
+proxy-groups:
+  - name: 🌍 PROXY
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/proxy.png"
+    type: select
+    proxies:
+        - 👉 手动切换
+        - ♻️ 自动选择
+        - 📲 Telegram
+        - 🤖 AI大模型
+        - DIRECT
+
+  - name: 👉 手动切换
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/select.png"
+    type: select
+    use: 
+    - A
+  - name: ♻️ 自动选择
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/auto.png"
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    use: 
+    - A
+    
+  - name: 📲 Telegram
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/telegram.png"
+    type: select
+    use: 
+    - A
+  - name: 🎮 Games-Global
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games-cn.png"
+    type: select
+    use: 
+    - A
+  - name: ✖️ Twitter
+    icon: "https://www.clashverge.dev/assets/icons/twitter.svg"
+    type: select
+    use: 
+    - A
+  - name: 🤖 AI大模型
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ai.png"
+    type: select
+    use: 
+    - A
+  - name: 🎵 TikTok
+    icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/tiktok.png"
+    type: select
+    use: 
+    - A
+
+
+sniffer                   :                                                     # 设置 ： 嗅探       Clash Meta (Clash Verge Rec) 专用规则
+  enable                  : true                                                # 嗅探器开关 :  开启后对 redir-host 类型识别的流量进行强制嗅探      
+  force-dns-mapping: true
+  parse-pure-ip: true 
+  override-destination    : true                                               # 是否使用嗅探结果作为实际访问,默认 true    ,全局配置,优先级低于 sniffer.sniff 实际配置 
+
+  sniff                   :
+    HTTP                  : { ports : [ 80  , 8080-8880 ]  }   # HTTP , 默认如果不配置 ports , 默认嗅探  80
+    TLS                   : { ports : [ 443 , 8443      ]                                  }   # TLS , 默认如果不配置 ports , 默认嗅探 443
+    QUIC                  : { ports : [ 443 , 8443      ]                                  }
+  force-domain            : [ '+.v2ex.com'                                                 ]   # 需要强制嗅探的域名（默认情况下只对IP进行嗅探）
+  skip-domain             :                                                     # 需要跳过嗅探的域名。主要解决部分站点sni字段非域名，导致嗅探结果异常的问题，如：米家设备
+                            -  'Mijia Cloud' 
+                            -  'dlg.io.mi.com'  
+                            -  '+.apple.com'  
+                            -  '+.icloud.com'  
+                            -  '+.wechat.com'  
+                            -  '+.qpic.cn'  
+                            -  '+.qq.com'  
+                            -  '+.wechatapp.com'  
+                            -  '+.vivox.com'  
+                            -  '+.oray.com'  
+                            -  '+.sunlogin.net'     
+  skip-dst-address:
+    - 'rule-set:telegramcidr'
+    - 'geoip:LAN'
+    - 'rule-set:cncidr'
+  
+
+
+
+ 
+
+dns                       :
+  enable: true                                                # 如果配置为关闭，则将仅仅使用系统 DNS
+ #prefer-h3: true                                                # 设置：是否开启 DOH 的 http/3（加密DNS请求）
+  ipv6: true                                             # 设置：是否启动 基于IPV6的DNS查询
+  listen: '0.0.0.0:1053'  
+ #listen: '0.0.0.0:53'                                   # 设置，如何拦截本地所有DNS请求 ： 方法 ，监听本地的53端口 ，如果此选项配置错误，则Clash 的DNS代理分流逻辑将不生效
+  use-hosts: true                                                # 使用hosts # lookup hosts and return IP record
+  use-system-hosts: true                                                # 
+  skip-cert-verify: false                                               # TLS 握手时是否忽略证书验证    （ 如果设置为 true ，即，跳过证书验证，用来解决部分兼容性问题 ）
+ 
+  default-nameserver:     # 仅用于，直连请求  的 域名解析
+     
+    - tls://223.5.5.5
+    - tls://223.6.6.6 
+  proxy-server-nameserver:     # 仅用于，代理节点  的 域名解析 
+    - https://hrbgyitz34.cloudflare-gateway.com/dns-query
+  direct-nameserver:   # 用于direct 出口域名解析的DNS服务器 的 域名解析
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  nameserver:           # 注意⚠️ iOS（Stash） 对 DNS 数量非常敏感，不建议超过2个（否则会导致：网络内存占用上升超过50MB限制、iOS网络模块频繁崩溃）  ⚠️⚠️⚠️ 注意：follow-rule开启后，域名链接的DNS、DOH ，必须配合GlobalDNS分流策略  ⚠️⚠️⚠️
+  - https://dns.adguard-dns.com/dns-query     # AdGuard          # 94.140.14.14        94.140.15.15
+  - https://cloudflare-dns.com/dns-query 
+    # Cloudflare DNS   # 1.1.1.1             1.0.0.1
+  - https://dns.google/dns-query              # Google DNS       # 8.8.8.8             8.8.4.4
+    
+  #  - https://dns.quad9.net/dns-query           # IBM Quad9        # 9.9.9.11            149.112.112.11     
+  #  - https://doh.opendns.com/dns-query         # OpenDNS          # 208.67.220.220      208.67.222.222
+  #  - https://doh.dns.sb/dns-query              # DNS.SB           # 185.222.222.222     45.11.45.11
+
+  #  - https://dns.twnic.tw/dns-query            # Quad101          # 101.101.101.10      101.102.103.10
+  respect-rules: true                                             # Clash.meta 专属。默认为false ： DNS 查询请求，直接出站。ture ：DNS查询请求，经rule代理规则转发。 ⚠️⚠️⚠️  建议：使用IP配置节点的Server字段，而非域名，否则应配置 proxy-server-nameserver。详情请看：https://wiki.metacubex.one/config/dns/#_1 
+  #follow-rule: true                                             # Stash      专属。默认为false ： DNS 查询请求，直接出站，ture ：DNS查询请求，经rule代理规则转发。 ⚠️⚠️⚠️  建议：使用IP配置节点的Server字段，而非域名，详情请看：https://stash.wiki/featrues/dns-server
+                                                                             # 请注意：由于 Stash 没有 proxy-server-nameserver字段，所以，开启follow-rule 后，请保证如下规则： 转发 DNS 请求的代理地址为 IP 地址，而不是域名，或 DNS 服务器地址为 IP 地址，而不是域名
+  
+  enhanced-mode: fake-ip                                      # 可选值 fake-ip / redir-host ，默认 redir-host   （ ⚠️⚠️⚠️ 注意 ：Stash 3.0 不支持 redir-host ）
+  fake-ip-range: '198.18.0.1/16'
+  fake-ip-range6: fdfe:dcba:9876::1/64
+  fake-ip-filter-mode: blacklist                                        # 默认 blacklist ：匹配命中的，立刻返回真实IP（不使用Fake IP）。 whitelist ：未匹配命中的默认直接返回真实IP（不使用Fake IP），匹配命中的财使用Fake IP。
+  fake-ip-filter: ['rule-set:fakeip-filter_domain', 'rule-set:private']                                        # 设置：哪些域名 ，强制只使用 nameserver DNS 进行解析，并立刻返回真实IP ：这里配置为，任何域名，都不会被解析为 fake ip，所有解析请求将会返回它们真实的 IP 地址
+ #fallback-filter:                                                  # 设置：哪些IP段 ，强制使用 fallback DNS 进行二次解析，
+
+
+
+  # 哪些域名 使用 哪些DNS服务器，进行解析 （⚠️⚠️ 注意；如果 在非中国地区 使用本规则，建议注释掉本段，以便降低DNS泄漏风险https://raw.githubusercontent.com/Accademia/Additional_Rule_For_Clash/refs/heads/main/GeositeCN/GeositeCN_Domain.yaml
+  nameserver-policy: 
+    { 'geosite:cn': ['https://dns.alidns.com/dns-query', 'https://doh.pub/dns-query'] }  
+                   # 仅Clash Meta支持，但 Stash 3.0 不支持！
+
+
+
+
+
+
+rule-providers:
+
+  games-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/games-cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
+    interval: 86400 
+
+  games:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/games.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games.mrs"
+    interval: 86400
+
+  fakeip-filter_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: 'https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs' }
+              
+
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+  TikTok:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/tiktok.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+  Gemini_Domain: {type: http, behavior: domain, interval: 86400, url: 'https://cdn.jsdelivr.net/gh/Accademia/Additional_Rule_For_Clash@master/Gemini/Gemini_Domain.yaml', path: ./ruleset/Gemini_Domain.yaml}    
+
+
+  google-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/google-cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
+    interval: 86400
+
+#  proxy:
+#    type: http
+#    behavior: domain
+#    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+#    path: ./ruleset/proxy.yaml
+#    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+    
+  HijackingPlus:
+    type: http
+    behavior: classical
+    url: "https://raw.githubusercontent.com/Accademia/Additional_Rule_For_Clash/refs/heads/main/HijackingPlus/HijackingPlus_No_Resolve.yaml"
+    path: ./ruleset/HijackingPlus.yaml
+    interval: 86400
+  
+  ai-2: { type: http, interval: 86400, behavior: domain, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs' }
+
+  ai-1:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/ai.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
+    interval: 86400
+  Grok_Domain                          : {type: http, behavior: domain    , interval: 86400, url: '[https://cdn.jsdelivr.net/gh/Accademia/Additional_Rule_For_Clash@master/Grok/Grok_Domain.yaml](https://cdn.jsdelivr.net/gh/Accademia/Additional_Rule_For_Clash@master/Grok/Grok_Domain.yaml)'                                        , path: ./ruleset/Grok_Domain.yaml                        }
+    
+  Grok_IP                              : {type: http, behavior: ipcidr    , interval: 86400, url: '[https://cdn.jsdelivr.net/gh/Accademia/Additional_Rule_For_Clash@master/Grok/Grok_IP.yaml](https://cdn.jsdelivr.net/gh/Accademia/Additional_Rule_For_Clash@master/Grok/Grok_IP.yaml)'                                            , path: ./ruleset/Grok_IP.yaml                            }
+
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
+    path: ./ruleset/telegramcidr.mrs
+    interval: 86400
+
+  telegram_domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs' }
+
+
+  twitter/x-domain: { type: http, interval: 86400, behavior: domain, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs' }
+  twitter/x-ip: { type: http, interval: 86400, behavior: ipcidr, format: mrs, url: 'https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs' }
+  twitter/x-blackmatrix7-No_Resolve: { type: http, interval: 86400, behavior: classical, format: yaml, url: 'https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Twitter/Twitter_No_Resolve.yaml' }
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
+    path: ./ruleset/cncidr.mrs
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400 
+    
+  China:
+    type: http
+    behavior: classical
+    interval: 86800 
+    url: 'https://raw.githubusercontent.com/Accademia/Additional_Rule_For_Clash/refs/heads/main/China/China.yaml'                                          
+    path: ./ruleset/China.yaml
+  captcha:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/ai.mrs
+    url: "https://raw.githubusercontent.com/echs-top/proxy/main/rules/mrs/captcha_domain.mrs"
+    interval: 86400                                                
+rules:
+  - AND,((NETWORK,UDP),(DST-PORT,3478-3479/5349-5350/19302-19309),(NOT,((RULE-SET,China))),(NOT,((RULE-SET,direct))),(NOT,((RULE-SET,games))),(NOT,((RULE-SET,games-cn))),(NOT,((RULE-SET,captcha))),(NOT,((RULE-SET,cncidr)))),REJECT
+#  - AND,((NETWORK,UDP),(DST-PORT,3478-3479/5349-5350/19302-19309),(NOT,((RULE-SET,China))),(NOT,((RULE-SET,direct))),(NOT,((RULE-SET,cncidr))),(NOT,((RULE-SET,captcha)))),REJECT
+  - RULE-SET,HijackingPlus,REJECT
+
+  - RULE-SET,applications,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - PROCESS-NAME,svchost.exe,DIRECT
+  - RULE-SET,private,DIRECT,no-resolve
+  - GEOIP,LAN,DIRECT,no-resolve      
+  - RULE-SET,lancidr,DIRECT,no-resolve
+  - RULE-SET,Gemini_Domain,🤖 AI大模型
+  - RULE-SET,Grok_Domain,🤖 AI大模型
+  - RULE-SET,Grok_IP,🤖 AI大模型
+  - RULE-SET,ai-1,🤖 AI大模型
+  - RULE-SET,ai-2,🤖 AI大模型
+  - RULE-SET,telegramcidr,📲 Telegram,no-resolve
+  - RULE-SET,telegram_domain,📲 Telegram
+  - PROCESS-NAME-REGEX,.*telegram.*,📲 Telegram
+  - RULE-SET,twitter/x-domain,✖️ Twitter
+  - RULE-SET,twitter/x-ip,✖️ Twitter,no-resolve
+  - RULE-SET,twitter/x-blackmatrix7-No_Resolve,✖️ Twitter
+  - PROCESS-NAME-REGEX,.*twitter.*,✖️ Twitter
+  - RULE-SET,google,🌍 PROXY
+  - RULE-SET,google-cn,🌍 PROXY
+  - RULE-SET,icloud,DIRECT
+  - RULE-SET,apple,DIRECT
+
+  - RULE-SET,games-cn,DIRECT
+  - PROCESS-NAME,bf6.exe,🎮 Games-Global
+  - RULE-SET,games,🎮 Games-Global
+  #- RULE-SET,proxy,🌍 PROXY
+  - RULE-SET,China,DIRECT
+  - RULE-SET,direct,DIRECT
+
+  - RULE-SET,cncidr,DIRECT
+
+  - RULE-SET,TikTok,🎵 TikTok
+  - GEOIP,CN,DIRECT
+
+  - MATCH,🌍 PROXY
